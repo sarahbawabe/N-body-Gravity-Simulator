@@ -41,69 +41,72 @@ G = newG # Gravitational Constant
 
 N = 4000; #Iterations
 dt = .01; #Time step (years)
-checkMaximallyPacked = 0; # CHANGE TO 1 TO ADD A PLANET BETWEEN MARS AND JUPITER AND MAINTAIN STABLE ORBITS
+checkMaximallyPacked = 1; # CHANGE TO 1 TO ADD A PLANET BETWEEN MARS AND JUPITER AND MAINTAIN STABLE ORBITS
 
-if (checkMaximallyPacked ==1):
-    planets =11; #Includes Pluto, remembering the good ol' days. It also includes the Sun.
-    x,y, z,vx ,vy ,vz = np.zeros((planets,N+1)),np.zeros((planets,N+1)),np.zeros((planets,N+1)),\
+def set_up():
+    global planets, x, y, z, vx, vy, vz
+    if (checkMaximallyPacked == 1):
+        print("MAXIMALLY PACKED")
+        planets = 11; #Includes Pluto, remembering the good ol' days. It also includes the Sun.
+        x,y,z,vx,vy,vz = np.zeros((planets,N+1)),np.zeros((planets,N+1)),np.zeros((planets,N+1)),\
+            np.zeros((planets,N+1)),np.zeros((planets,N+1)),np.zeros((planets,N+1));
+        global m, mPacked, xPacked, yPacked, zPacked, vxPacked, vyPacked, vzPacked
+        vxPacked = vxPacked*dayToYear;
+        vyPacked = vyPacked*dayToYear;
+        vzPacked = vzPacked*dayToYear
+        m = mPacked;
+        for i in range(planets):
+            #These arrays come the starData.py
+            x[i][0] = xPacked[i][0];
+            y[i][0] = yPacked[i][0];
+            z[i][0] = zPacked[i][0];
+            vx[i][0] = vxPacked[i][0];
+            vy[i][0] = vyPacked[i][0];
+            vz[i][0] = vzPacked[i][0];
+    else:
+        planets = 10; #Includes Pluto, remembering the good ol' days. It also includes the Sun.
+        x,y,z,vx,vy,vz = np.zeros((planets,N+1)),np.zeros((planets,N+1)),np.zeros((planets,N+1)),\
         np.zeros((planets,N+1)),np.zeros((planets,N+1)),np.zeros((planets,N+1));
-    vxPacked = vxPacked*dayToYear;
-    vyPacked = vyPacked*dayToYear;
-    vzPacked = vzPacked*dayToYear
-    m = mPacked;
-    for i in range(planets):
-        #These arrays come the starData.py
+        global vxSet, vySet, vzSet
+        vxSet = vxSet*dayToYear;
+        vySet = vySet*dayToYear;
+        vzSet = vzSet*dayToYear
+        for i in range(planets):
+            #These arrays come the starData.py
+            x[i][0] = xSet[i][0];
+            y[i][0] = ySet[i][0];
+            z[i][0] = zSet[i][0];
+            vx[i][0] = vxSet[i][0];
+            vy[i][0] = vySet[i][0];
+            vz[i][0] = vzSet[i][0];
 
+    global timeSpace, timePeriod, ChangeInEnergy, h, ChangeInH, totalH, hChange, energy, mag
+    timeSpace = np.arange(0,dt*N,dt)
+    timePeriod = np.arange(0,dt*10,dt)
+    ChangeInEnergy = np.zeros(N); # Record change in energy to check validity of code
+    h = np.zeros((N,planets,3)) # variable for momentum
+    ChangeInH = np.zeros(N); # change in momentum
+    totalH = np.zeros((N,3)) # total momentum
+    hChange = np.zeros(N) #placeholder for momentum to check code
 
-        x[i][0] = xPacked[i][0];
-        y[i][0] = yPacked[i][0];
-        z[i][0] = zPacked[i][0];
+    energy = np.zeros(N);
 
-        vx[i][0] = vxPacked[i][0];
-        vy[i][0] = vyPacked[i][0];
-        vz[i][0] = vzPacked[i][0];
-else:
-    planets =10; #Includes Pluto, remembering the good ol' days. It also includes the Sun.
-    x,y, z,vx ,vy ,vz = np.zeros((planets,N+1)),np.zeros((planets,N+1)),np.zeros((planets,N+1)),\
-    np.zeros((planets,N+1)),np.zeros((planets,N+1)),np.zeros((planets,N+1));
-    vxSet = vxSet*dayToYear;
-    vySet = vySet*dayToYear;
-    vzSet = vzSet*dayToYear
-    for i in range(planets):
-        #These arrays come the starData.py
+    mag = np.zeros((planets,planets)) # distances between planets
 
-        x[i][0] = xSet[i][0];
-        y[i][0] = ySet[i][0];
-        z[i][0] = zSet[i][0];
-        vx[i][0] = vxSet[i][0];
-        vy[i][0] = vySet[i][0];
-        vz[i][0] = vzSet[i][0];
+    #acceleration
+    global ax, ay, az, axPull, ayPull, azPull, axNew, ayNew, azNew
+    axNew,ayNew,azNew = np.zeros((planets,planets)),np.zeros((planets,planets)),np.zeros((planets,planets))
+    ax = np.zeros((planets,N))
+    ay = np.zeros((planets,N))
+    az = np.zeros((planets,N))
+    axPull, ayPull,azPull = np.zeros((planets,1)),np.zeros((planets,1)),np.zeros((planets,1))
 
+    #position and velocity at Cartesian vector components
+    global vBary, rBary
+    vBary= np.zeros((N,3)) # Velocity barycenter
+    rBary = np.zeros((N,3)) #barycenter position
 
-timeSpace = np.arange(0,dt*N,dt)
-timePeriod = np.arange(0,dt*10,dt)
-ChangeInEnergy = np.zeros(N); # Record change in energy to check validity of code
-h = np.zeros((N,planets,3)) # variable for momentum
-ChangeInH = np.zeros(N); # change in momentum
-totalH = np.zeros((N,3)) # total momentum
-hChange = np.zeros(N) #placeholder for momentum to check code
-
-energy = np.zeros(N);
-
-mag = np.zeros((planets,planets)) # distances between planets
-#acceleration
-axNew,ayNew,azNew = np.zeros((planets,planets)),np.zeros((planets,planets)),np.zeros((planets,planets))
-ax = np.zeros((planets,N))
-ay = np.zeros((planets,N))
-az = np.zeros((planets,N))
-axPull, ayPull,azPull = np.zeros((planets,1)),np.zeros((planets,1)),np.zeros((planets,1))
-
-#position and velocity at Cartesian vector components
-
-vBary= np.zeros((N,3)) # Velocity barycenter
-rBary = np.zeros((N,3)) #barycenter position
-
-
+    return planets,x,y,z,vx,vy,vz,ax,ay,az,m
 
 #==============================================================================
 #  helper function definitions
@@ -198,6 +201,7 @@ def nOrbit(x,y,z,xPull,yPull,zPull,vx,vy,vz,vxPull,vyPull,vzPull,G,m,mPull,n,pla
     #                  mPull : mass of other object (probably the Sun)
     #                      n : Number of iterations
     #                     dt : Time step (years)
+
     mTot = 0;
     rAdd = 0;
     vAdd = 0;
@@ -309,7 +313,7 @@ def nOrbit(x,y,z,xPull,yPull,zPull,vx,vy,vz,vxPull,vyPull,vzPull,G,m,mPull,n,pla
 
     # ChangeInEnergy,hMag,hPullMag,bary,vbary
 
-    return x,y,z,vx,vy,vz,ax,ay,az,energy, ChangeInEnergy, totalH,ChangeInH,hRatio, hTotalMag,rBary,vBary;
+    return x,y,z,vx,vy,vz,ax,ay,az,energy,ChangeInEnergy,totalH,ChangeInH,hRatio,hTotalMag,rBary,vBary;
 
 
 def plot():
@@ -362,24 +366,24 @@ def plot():
 
     plt.figure(2)
     plt.plot(timeSpace, hRatio,'k')
-    #plt.legend(['Sun','Mercury','Venus','Earth','Mars','Jupiter','Saturn','Neptune','Uranus','Pluto'])
+    # plt.legend(['Sun','Mercury','Venus','Earth','Mars','Jupiter','Saturn','Neptune','Uranus','Pluto'])
     plt.title("Angular Momentum, \n"+datestr,{'size':'14'});
     plt.xlabel("dt (Year)", {'size':'14'});
     plt.ylabel("Change in Momentum / Total Momentum", {'size':'14'});
     plt.show();
 
     #savefig('NBodyOrbit100Momentum.png', bbox_inches='tight');
-
-if __name__ == '__main__':
-
+    
+def main():
+    set_up()
     #==============================================================================
     #  RUN SCRIPT
     #==============================================================================
-    # print(x,y,z,x,y,z,vx,vy,vz,vx,vy,vz,G,m,m,N,planets,dt)
-    print(m)
+    global a,b,c,va,vb,vc,aa,ab,ac,energy, ChangeInE,totalH, ChangeInH,hRatio,hTotalMag, rBary,vBary, datestr
     a,b,c,va,vb,vc,aa,ab,ac,energy, ChangeInE,totalH, ChangeInH,hRatio,hTotalMag, rBary,vBary = nOrbit(x,y,z,x,y,z,vx,vy,vz,vx,vy,vz,G,m,m,N,planets,dt);
     datestr = "June 20, 1988 - June 20, 2028"
-    # print("a.length", len(a))
-    # print("a[0].length", len(a[0]))
-    # print("a", a)
-    # plot();
+    plot()
+
+
+if __name__ == '__main__':
+    main()

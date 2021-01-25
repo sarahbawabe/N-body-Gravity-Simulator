@@ -7,17 +7,18 @@ Created on Sun Mar 20 03:05:45 2016
 import numpy as np
 _all_=['x','y','z','vx','vy','vz','m']
 
-# Data on celestial bodies in the Solar system found on nasa.gov. 
+# Data on celestial bodies in the Solar system found on nasa.gov.
 #==============================================================================
 # 1988 - Jun - 20
 
-
-solar = 1.988544*10**30 # in kg
+planet_list = ["sun", "mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune", "pluto"]
+planet_list_x = ["sun", "mercury", "venus", "earth", "mars", "x", "jupiter", "saturn", "uranus", "neptune", "pluto"]
+solar = 1.988544e30 # in kg
 mercury = 3.302e23
 venus = 48.685e23
 earth = 5.97219e24
 mars = 6.4185e23
-jup = 1898.13*10**24
+jup = 1898.13e24
 saturn = 5.68319e26
 neptune = 102.41e24
 uranus = 86.8103e24
@@ -25,16 +26,16 @@ pluto= 1.307e22
 
 planet = 3.2e24 # Planet refers to an additional planet I can add to the solar
 # system to test if it is maximally packed. (The solar system is not
-# maximally packed. There is room to add another planet and preserve the 
+# maximally packed. There is room to add another planet and preserve the
 # stable orbit of all planets.)
 
-dayToYear = 365.25; 
+dayToYear = 365.25;
 
 
 #==============================================================================
 # Mercury
 #==============================================================================
-   
+
 xMercury = 8.887985138765460E-02
 yMercury = -4.426150338141062E-01
 zMercury = -4.475716356484761E-02
@@ -47,14 +48,14 @@ mMercury = mercury / solar
 # Venus
 #==============================================================================
 
-xVenus = 4.043738093622098E-02 
+xVenus = 4.043738093622098E-02
 yVenus = -7.239789211502183E-01
 zVenus = -1.241560658530024E-02
 vxVenus = 2.005742309538389E-02
 vyVenus = 1.141448268256643E-03
 vzVenus = -1.142174441569258E-03
 mVenus = venus/solar
-  
+
 #==============================================================================
 # Earth
 #==============================================================================
@@ -65,7 +66,7 @@ yEarth =  -1.014332737790859E+00
 zEarth =  -1.358267619371298E-05
 #velocity in AU/day
 vxEarth =  1.692836723212859E-02
-vyEarth = -3.484006532982474E-04 
+vyEarth = -3.484006532982474E-04
 vzEarth =  6.028542314557626E-07
 mEarth = earth/solar;
 
@@ -78,12 +79,12 @@ mEarth = earth/solar;
 # Mars
 #==============================================================================
 
-   
+
 xMars = 7.462481663749645E-01
 yMars = -1.181663652521456E+00
 zMars = -4.321921404013512E-02
 vxMars = 1.235610918162121E-02
-vyMars = 8.680869489377649E-03 
+vyMars = 8.680869489377649E-03
 vzMars = -1.220500608452554E-04
 mMars = mars/solar
 
@@ -105,12 +106,12 @@ mPlanet = planet / solar
 # Jupiter
 #==============================================================================
 
-xJup = 3.384805319103406E+00  
+xJup = 3.384805319103406E+00
 yJup =   3.658805636759595E+00
-zJup =   -9.100441946210819E-02 
+zJup =   -9.100441946210819E-02
 #velocity in AU/day
 vxJup =  -5.634671617093230E-03
-vyJup =  5.479180979634376E-03 
+vyJup =  5.479180979634376E-03
 vzJup =    1.034981407898108E-04
 mJup = jup/solar;
 
@@ -151,7 +152,7 @@ vzUranus =  -5.164025224695875E-05
 mUranus = uranus / solar
 
 #==============================================================================
-# Pluto 
+# Pluto
 #==============================================================================
 
 xPluto = -2.129074273328636E+01
@@ -160,16 +161,16 @@ zPluto = 8.187955378677129E+00
 vxPluto = 2.276295756013608E-03
 vyPluto = -2.670481848836963E-03
 vzPluto = -3.669545371032554E-04
-mPluto = pluto / solar 
+mPluto = pluto / solar
 
 
 #target  -1.156541154581570E+01 -2.704864218000164E+01  6.239749761161465E+00
 #   2.964408290188142E-03 -1.722224413824548E-03 -6.839434010481107E-04
 
 #==============================================================================
-# Sun 
+# Sun
 #==============================================================================
-       
+
 xSun = -3.430031536367300E-03
 ySun = 1.761881027012596E-03
 zSun = 1.246691303879918E-05
@@ -193,7 +194,7 @@ vySet = np.array([[vySun], [vyMercury], [vyVenus], [vyEarth], [vyMars], [vyJup],
 vzSet = np.array([[vzSun], [vzMercury], [vzVenus], [vzEarth], [vzMars], [vzJup], [vzSaturn], [vzUranus], [vzNeptune], [vzPluto]])
 m = np.array([mSun, mMercury, mVenus, mEarth, mMars, mJup, mSaturn, mUranus, mNeptune, mPluto])
 
-#Arrays for testing if the solar system is maximally packed. 
+#Arrays for testing if the solar system is maximally packed.
 xPacked = np.array([[xSun], [xMercury], [xVenus], [xEarth], [xMars], [xPlanet],[xJup], [xSaturn], [xUranus], [xNeptune], [xPluto]])
 yPacked = np.array([[ySun], [yMercury], [yVenus], [yEarth], [yMars], [yPlanet], [yJup], [ySaturn], [yUranus], [yNeptune], [yPluto]])
 zPacked = np.array([[zSun], [zMercury], [zVenus], [zEarth], [zMars], [zPlanet],[zJup], [zSaturn], [zUranus], [zNeptune], [zPluto]])
@@ -201,8 +202,3 @@ vxPacked = np.array([[vxSun], [vxMercury], [vxVenus], [vxEarth], [vxMars], [vxPl
 vyPacked = np.array([[vySun], [vyMercury], [vyVenus], [vyEarth], [vyMars], [vyPlanet],[vyJup], [vySaturn], [vyUranus], [vyNeptune], [vyPluto]])
 vzPacked = np.array([[vzSun], [vzMercury], [vzVenus], [vzEarth], [vzMars], [vzPlanet],[vzJup], [vzSaturn], [vzUranus], [vzNeptune], [vzPluto]])
 mPacked = np.array([mSun, mMercury, mVenus, mEarth, mMars, mPlanet, mJup, mSaturn, mUranus, mNeptune, mPluto])
-
-
-
-
-
