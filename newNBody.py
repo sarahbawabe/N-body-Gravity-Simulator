@@ -22,10 +22,11 @@ import bodyObject as bObj
 
 class NBody:
 
-    def __init__(self, bodies, ndim):
+    def __init__(self, bodies, ndim, iters):
         self.bodies = bodies
         self.N = len(bodies)
         self.ndim = ndim
+        self._iters = iters # number of iterations
         self.coords = []
         self.masses = []
         self.vels = []
@@ -47,7 +48,6 @@ class NBody:
         G_old = 6.67259e-11 # in m^3/(kg-s^2)
         self._G = G_old*(1/self._AU)**3/(1/self._solar*(1/(self._year))**2) # gravitational constant
 
-        self._iters = 4000 # iterations
         self._dt = .01 # time step (years)
 
         # initialize and update position & velocity matrices
@@ -298,7 +298,7 @@ def main():
     #==============================================================================
     # obj_list = bObj.convert_to_obj_list(m, coords_matrix, vels_matrix)
     obj_list = bObj.generate_rand_obj_list(N=10,ndim=3)
-    nBody = NBody(obj_list, ndim=3)
+    nBody = NBody(obj_list, ndim=3,iters=4000)
     nBody.perform_simulation()
     nBody.plot()
 
