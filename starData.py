@@ -184,7 +184,6 @@ mSun = 1
 # arrays
 #==============================================================================
 
-
 #Arrays for modeling the solar system
 xSet = np.array([[xSun], [xMercury], [xVenus], [xEarth], [xMars], [xJup], [xSaturn], [xUranus], [xNeptune], [xPluto]])
 ySet = np.array([[ySun], [yMercury], [yVenus], [yEarth], [yMars], [yJup], [ySaturn], [yUranus], [yNeptune], [yPluto]])
@@ -202,3 +201,7 @@ vxPacked = np.array([[vxSun], [vxMercury], [vxVenus], [vxEarth], [vxMars], [vxPl
 vyPacked = np.array([[vySun], [vyMercury], [vyVenus], [vyEarth], [vyMars], [vyPlanet],[vyJup], [vySaturn], [vyUranus], [vyNeptune], [vyPluto]])
 vzPacked = np.array([[vzSun], [vzMercury], [vzVenus], [vzEarth], [vzMars], [vzPlanet],[vzJup], [vzSaturn], [vzUranus], [vzNeptune], [vzPluto]])
 mPacked = np.array([mSun, mMercury, mVenus, mEarth, mMars, mPlanet, mJup, mSaturn, mUranus, mNeptune, mPluto])
+
+# arrays for transforming into bodyObjects and subsequent use for newNBody.py
+coords_matrix = np.transpose(np.array([xSet.flatten(), ySet.flatten(), zSet.flatten()]))
+vels_matrix = np.transpose(np.array([vxSet.flatten(), vySet.flatten(), vzSet.flatten()]))
